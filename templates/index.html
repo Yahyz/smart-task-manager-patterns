@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Task Manager</title>
+    <style>
+        body {
+            font-family: Arial;
+            margin: 40px;
+            background: #f4f6f8;
+        }
+
+        h2 {
+            color: #333;
+        }
+
+        .card {
+            background: white;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .task {
+            padding: 10px;
+            margin-bottom: 10px;
+            border-left: 5px solid #007bff;
+            background: #fafafa;
+        }
+
+        .status-pending { border-left-color: orange; }
+        .status-progress { border-left-color: blue; }
+        .status-done { border-left-color: green; }
+
+        .notifications {
+            background: #eef;
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        button {
+            padding: 5px 10px;
+            border: none;
+            background: #007bff;
+            color: white;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        select, input {
+            padding: 5px;
+            margin-right: 10px;
+        }
+
+        a {
+            text-decoration: none;
+            color: #007bff;
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <h2>Add Task</h2>
+    <form method="POST" action="/add">
+        <input type="text" name="name" placeholder="Task name" required>
+
+        <select name="priority">
+            <option value="1">1 (Low)</option>
+            <option value="2">2</option>
+            <option value="3">3 (Medium)</option>
+            <option value="4">4</option>
+            <option value="5">5 (High)</option>
+        </select>
+
+        <button type="submit">Add</button>
+    </form>
+</div>
+
+<div class="card">
+    <h2>Notifications</h2>
+    <div class="notifications">
+        {% for note in notifications %}
+            <div>{{ note }}</div>
+        {% endfor %}
+    </div>
+</div>
+
+<div class="card">
+    <h2>Tasks</h2>
+    {% for task in tasks %}
+    <div class="task 
+        {% if task.status == 'Pending' %}status-pending
+        {% elif task.status == 'In Progress' %}status-progress
+        {% elif task.status == 'Done' %}status-done
+        {% endif %}
+    ">
+        <b>{{ task.name }}</b>  
+        (Priority: {{ task.priority }})  
+        - Status: <b>{{ task.status }}</b>
+
+        <form method="POST" action="/update/{{ loop.index0 }}">
+            <select name="status">
+                <option>Pending</option>
+                <option>In Progress</option>
+                <option>Done</option>
+            </select>
+            <button type="submit">Update</button>
+        </form>
+    </div>
+    {% endfor %}
+</div>
+
+<a href="/clear_notifications">Clear Notifications</a>
+
+<div class="card">
+    <h2>Sort</h2>
+    <a href="/sort/name">Sort by Name</a>
+    <a href="/sort/priority">Sort by Priority</a>
+</div>
+
+</body>
+</html>

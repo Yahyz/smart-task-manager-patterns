@@ -3,12 +3,20 @@ class Observer:
         pass
 
 class EmailNotifier(Observer):
+    def __init__(self, notifications):
+        self.notifications = notifications
+
     def update(self, message):
-        print(f"Email: {message}")
+        msg = f"Email: {message}"
+        self.notifications.append(msg)
 
 class SMSNotifier(Observer):
+    def __init__(self, notifications):
+        self.notifications = notifications
+
     def update(self, message):
-        print(f"SMS: {message}")
+        msg = f"SMS: {message}"
+        self.notifications.append(msg)
 
 class Task:
     def __init__(self, name):
